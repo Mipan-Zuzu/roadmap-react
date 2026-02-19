@@ -4,6 +4,7 @@ import cors from "cors"
 import fs from "fs"
 import { json } from "stream/consumers"
 import { parse } from "path"
+import { stringify } from "querystring"
 
 const app = express()
 app.use(express.json())
@@ -27,10 +28,31 @@ app.get("/data", (req, res) => {
 })
 
 
-// app.post("/data", (req, res) => {
-//     const data = req.body
-//     console.log("tambah data" + data)
-// })
+app.post("/data", (req, res) => {
+    const data = req.body
+    const {id, barang} = data
+    fs.readFile("./db.json", "utf-8", (err, jsonString) => {
+        const parses = JSON.parse(jsonString)
+        
+        if(parses.find(item => item.id === id)){
+            res.json({data : "data id duplikat"})
+            return
+        }
+
+        if(parses.find(item => item.barang === barang)){
+            res.json({data : "data barang duplikat"})
+            return
+        }
+        const together = [...parses, data]
+        const change = JSON.stringify(together)
+        fs.writeFile("./db.json", change, "utf-8", (err) => {
+            if(err) {
+                res.status(401).json(err)
+            }
+            res.json(data)
+        })
+    })
+})
 
 app.put("/data/:id", (req, res) => {
     fs.readFile("./db.json", 'utf8', (err, jsonString) => {

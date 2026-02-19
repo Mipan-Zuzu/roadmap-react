@@ -4,19 +4,22 @@ import './index.css'
 import App from './App.jsx'
 import {createBrowserRouter, RouterProvider} from "react-router-dom"
 import { Provider } from 'react-redux'
-import store from "./Store/Store.jsx"
+import ErrorPages from './pages/Error.jsx'
 
 const router = createBrowserRouter ([
   {
+    path: "/",
+    element: <div>hi ini halaman utama /</div>,
+    errorElement: <ErrorPages />
+  },
+  {
     path:"/suki",
-    element: <App />
+    element: <App />,
   }
 ])
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Provider store={store}>
     <RouterProvider router={router} />
-    </Provider>
   </StrictMode>,
 )

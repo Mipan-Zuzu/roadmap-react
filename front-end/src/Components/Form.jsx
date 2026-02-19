@@ -5,17 +5,18 @@ const Form = () => {
     const [cost, setCost] = useState(0)
     const [price, setPrice] = useState(0)
 
-    const [combine, setCombine] = useState({
+    const handleState = () => {
+        const [combine, setCombine] = useState({
         "barang" : barang,
         "const" : cost,
         "price" : price
     })
+    }
 
 
     return (
-        <>
-            <div>
-                <label htmlFor="barang">
+        <form action={handleState}>
+             <label htmlFor="barang">
                     <h1>Barang</h1>
                     <input 
                     type="text"
@@ -39,8 +40,8 @@ const Form = () => {
                     onChange={}
                     />
                 </label>
-            </div>
-        </>
+                <button type="submit">Send</button>
+        </form>
     )
 }
 

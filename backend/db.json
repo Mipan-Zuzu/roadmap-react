@@ -1,12 +1,1 @@
-[
-  { "id": "1","barang": "susu", "cost": 1, "price": 10 },
-  { "id": "2","barang": "roti", "cost": 2, "price": 15 },
-  { "id": "3","barang": "telur", "cost": 1, "price": 12 },
-  { "id": "4","barang": "keju", "cost": 3, "price": 20 },
-  { "id": "5","barang": "mentega", "cost": 2, "price": 18 },
-  { "id": "6","barang": "coklat", "cost": 4, "price": 25 },
-  { "id": "7","barang": "apel", "cost": 1, "price": 8 },
-  { "id": "8","barang": "pisang", "cost": 1, "price": 7 },
-  { "id": "9","barang": "beras", "cost": 5, "price": 30 },
-  { "id": "10","barang": "gula", "cost": 2, "price": 12 }
-]
+[{"id":"3","barang":"si","cost":2,"price":20},{"id":"4","barang":"si","cost":2,"price":20},{"id":"10","barang":"si","cost":2,"price":20},{"id":"11","barang":"cucu","cost":2,"price":20}]
