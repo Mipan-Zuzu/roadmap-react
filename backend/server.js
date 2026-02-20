@@ -19,7 +19,7 @@ app.get("/data", (req, res) => {
                 console.warn("invalid data")
             }
             const parse = JSON.parse(jsonString)
-            res.status(200).json(parse)
+            res.status(200).json({data : parse})
         }catch{
             res.status(404).json({data: "not found"})
             console.error("data not found")
@@ -47,9 +47,9 @@ app.post("/data", (req, res) => {
         const change = JSON.stringify(together)
         fs.writeFile("./db.json", change, "utf-8", (err) => {
             if(err) {
-                res.status(401).json(err)
+                res.status(401).json({data : err})
             }
-            res.json(data)
+            res.json({data : data})
         })
     })
 })
@@ -57,11 +57,31 @@ app.post("/data", (req, res) => {
 app.put("/data/:id", (req, res) => {
     fs.readFile("./db.json", 'utf8', (err, jsonString) => {
         const parses = JSON.parse(jsonString)
-        const data = req.body
         const {id} = req.params
         const findId = parses.find(item => item.id === id) //findData
         Object.assign(findId, req.body) //Update
-        res.json(findId)
+        res.json({data : findId})
+    })
+})
+
+app.delete("/data/:id", (req, res) => {
+    const {id} = req.params
+    fs.readFile("./db.json", "utf-8", (err, jsonString) => {
+        const parses = JSON.parse(jsonString)
+        const filters = parses.filter(item => item.id !== id)
+        console.log(filters)
+        const stringifyFilter = JSON.stringify(filters)
+        fs.writeFile("./db.json", stringifyFilter, "utf-8", (err) => {
+            const findit = parses.find(item => item.id === id)
+            if(findit == null) {
+                res.status(401).json({data : "data tidak ada, sudah di hapus"})
+            }
+            if(err) {
+                res.json({data : err})
+            }
+
+            res.json({data : "berhasil di hapus"})
+        })
     })
 })
 
