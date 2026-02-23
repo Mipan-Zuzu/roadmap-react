@@ -1,9 +1,10 @@
 import './index.css'
+import ShowPages from './pages/ShowPages'
 
 function App() {
   return (
     <>
-      <h1>kocak</h1>
+      <ShowPages />
     </>
   )
 }
