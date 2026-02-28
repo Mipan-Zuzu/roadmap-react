@@ -29,17 +29,23 @@ app.get("/data", (req, res) => {
 
 
 app.post("/data", (req, res) => {
-    const data = req.body
-    const {id, barang} = data
+    const dataBody = req.body
+    const {id} = dataBody
+    const {data} = id
     fs.readFile("./db.json", "utf-8", (err, jsonString) => {
         const parses = JSON.parse(jsonString)
+
+        if(parses !== null) {
+            res.json({data: "data null"})
+            return
+        }
         
-        if(parses.find(item => item.id === id)){
+        if(parses.find(item => item.id === data.id)){
             res.json({data : "data id duplikat"})
             return
         }
-
-        if(parses.find(item => item.barang === barang)){
+        
+        if(parses.find(item => item.barang === data.barang)){
             res.json({data : "data barang duplikat"})
             return
         }
@@ -49,7 +55,8 @@ app.post("/data", (req, res) => {
             if(err) {
                 res.status(401).json({data : err})
             }
-            res.json({data : data})
+            res.status(201).json({data : data})
+            console.log(data)
         })
     })
 })
@@ -58,8 +65,8 @@ app.put("/data/:id", (req, res) => {
     fs.readFile("./db.json", 'utf8', (err, jsonString) => {
         const parses = JSON.parse(jsonString)
         const {id} = req.params
-        const findId = parses.find(item => item.id === id) //findData
-        Object.assign(findId, req.body) //Update
+        const findId = parses.find(item => item.id === id) 
+        Object.assign(findId, req.body) 
         res.json({data : findId})
     })
 })
@@ -80,7 +87,7 @@ app.delete("/data/:id", (req, res) => {
                 res.json({data : err})
             }
 
-            res.json({data : "berhasil di hapus"})
+            res.status(201).json({data : "berhasil di hapus"})
         })
     })
 })

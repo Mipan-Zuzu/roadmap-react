@@ -1,48 +1,40 @@
+import Input from "../ui/Input"
+import Button from "../ui/Button"
 import { useState } from "react"
+import { useParams } from "react-router-dom"
+import { useSelector } from "react-redux"
+import { productSelector } from "../features/Product/ProductSlice"
 
-const updateProduct = () => {
-    const [barang, setBarang] = useState("")
-    const [cost, setCost] = useState(0)
-    const [price, setPrice] = useState(0)
-
-    const handleState = () => {
-        const [combine, setCombine] = useState({
-        "barang" : barang,
-        "const" : cost,
-        "price" : price
-    })
-    }
-
+const UpdatePages = () => {
+    // const {id} = useParams()
+    // const productSelectors = useSelector(productSelector.selectAll)
+    // console.log(findProduct)
+    // const [data, setData] = useState({
+    //     id : "",
+    //     barang: "",
+    //     cost: 0,
+    //     price: 0
+    // })
 
     return (
-        <form action={handleState}>
-             <label htmlFor="barang">
-                    <h1>Barang</h1>
-                    <input 
-                    type="text"
-                    placeholder="masukan nama Barang"
-                    onChange={(e) }
-                    />
+        <div>
+            <form action="">
+                <label htmlFor="barang">
+                    <h1>barang</h1>
+                    <Input placeholder="update barang" name="barang" value={data.barang} />
                 </label>
                 <label htmlFor="cost">
                     <h1>cost</h1>
-                    <input 
-                    type="number"
-                    placeholder="masukan jumlah barang"
-                    onChange={}
-                    />
+                    <Input placeholder="update cost" name="cost" value={data.cost} />
                 </label>
-                <label htmlFor="price">
+                 <label htmlFor="price">
                     <h1>price</h1>
-                    <input 
-                    type="number"
-                    placeholder="masukan harga"
-                    onChange={}
-                    />
+                    <Input placeholder="update price" name="price" value={data.price} />
                 </label>
-                <button type="submit">Send</button>
-        </form>
+                <Button type="submit">kirim</Button>
+            </form>
+        </div>
     )
 }
 
-export default updateProduct
+export default UpdatePages

@@ -7,11 +7,26 @@ export const getProduct = createAsyncThunk("/product/getProduct", async () => {
 })
 
 export const updateProduct = createAsyncThunk("/product/updateProduct", async (id,barang,cost,price) => {
-    const res = await axios.post(`http://localhost:3000/data/${id}`, {
+    const res = await axios.put(`http://localhost:3000/data/${id}`, {
         barang,
         cost,
         price
     })
+    return res.data
+})
+
+export const addProduct = createAsyncThunk("/product/addProduct", async (id, barang, cost, price) => {
+    const res = await axios.post(`http://localhost:3000/data`, {
+        id,
+        barang,
+        cost,
+        price
+    })
+    return res.data
+})
+
+export const deleteProduct = createAsyncThunk("/product/deleteProduct", async (id) => {
+    const res = await axios.delete(`http://localhost:3000/data/${id}`)
     return res.data
 })
 
@@ -28,7 +43,15 @@ const productSlice = createSlice({
             productEntry.setAll(state, action.payload.data)
         }),
         builder.addCase(updateProduct.fulfilled, (state, action) => {
-            productEntry.setAll(state, action.payload)
+            productEntry.updateOne(state, {
+                id : action.payload.id, changes : action.payload
+            })
+        }),
+        builder.addCase(addProduct.fulfilled, (state, action) => {
+            productEntry.addOne(state, action.payload)
+        }),
+        builder.addCase(deleteProduct.fulfilled, (state, action) => {
+            productEntry.removeOne(state, action.payload)
         })
     }
 })

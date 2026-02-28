@@ -6,7 +6,9 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom"
 import ErrorPages from './pages/Error.jsx'
 import { Provider } from 'react-redux'
 import { store } from './Store/Store.jsx'
-  
+import UpdatePages from './pages/UpdatePages.jsx'  
+import AddPages from './pages/AddPages.jsx'
+
 const router = createBrowserRouter ([
   {
     path: "/",
@@ -20,6 +22,14 @@ const router = createBrowserRouter ([
   {
     path: "/data/showpage/:id",
     element: <App/>
+  },
+  {
+    path: "/data/product/:id",
+    element: <UpdatePages />
+  },
+  {
+    path: "/data/barang",
+    element: <AddPages />
   }
 ])
 

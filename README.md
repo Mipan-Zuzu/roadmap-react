@@ -10,8 +10,8 @@ that's a my progres learning, also this repo for my personal documentation
 
 ## Requirement
 
- - Node js 20 + 
- - pnpm 11 + or npm
+ - NodeJs 18 + 
+ - pnpm 8 + or npm
  
 
 ## Run Project
