@@ -30,8 +30,9 @@ app.get("/data", (req, res) => {
 
 
 app.post("/data", (req, res) => {
-    const dataBody = req.body
-    const {id, barang} = dataBody
+    const {data} = req.body.id
+    console.log(data)
+    const {id, barang} = data
     fs.readFile("./db.json", "utf-8", (err, jsonString) => {
         const parses = JSON.parse(jsonString)
 
@@ -44,13 +45,13 @@ app.post("/data", (req, res) => {
             res.json({data : "data barang duplikat"})
             return
         }
-        const together = [...parses, dataBody]
+        const together = [...parses, data]
         const change = JSON.stringify(together)
         fs.writeFile("./db.json", change, "utf-8", (err) => {
             if(err) {
                 res.status(401).json({data : err})
             }
-            res.status(201).json({data : dataBody}) 
+            res.status(201).json({data : data}) 
         })
     })
 })
