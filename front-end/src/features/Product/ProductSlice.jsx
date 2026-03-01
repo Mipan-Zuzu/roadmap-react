@@ -6,8 +6,9 @@ export const getProduct = createAsyncThunk("/product/getProduct", async () => {
     return res.data
 })
 
-export const updateProduct = createAsyncThunk("/product/updateProduct", async (id,barang,cost,price) => {
+export const updateProduct = createAsyncThunk("/product/updateProduct", async ({id,barang,cost,price}) => {
     const res = await axios.put(`http://localhost:3000/data/${id}`, {
+        id,
         barang,
         cost,
         price

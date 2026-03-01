@@ -5,6 +5,7 @@ import fs from "fs"
 import { json } from "stream/consumers"
 import { parse } from "path"
 import { stringify } from "querystring"
+import e from "express"
 
 const app = express()
 app.use(express.json())
@@ -30,44 +31,41 @@ app.get("/data", (req, res) => {
 
 app.post("/data", (req, res) => {
     const dataBody = req.body
-    const {id} = dataBody
-    const {data} = id
+    const {id, barang} = dataBody
     fs.readFile("./db.json", "utf-8", (err, jsonString) => {
         const parses = JSON.parse(jsonString)
 
-        if(parses !== null) {
-            res.json({data: "data null"})
-            return
-        }
-        
-        if(parses.find(item => item.id === data.id)){
+        if(parses.find(item => item.id === id)){
             res.json({data : "data id duplikat"})
             return
         }
         
-        if(parses.find(item => item.barang === data.barang)){
+        if(parses.find(item => item.barang === barang)){
             res.json({data : "data barang duplikat"})
             return
         }
-        const together = [...parses, data]
+        const together = [...parses, dataBody]
         const change = JSON.stringify(together)
         fs.writeFile("./db.json", change, "utf-8", (err) => {
             if(err) {
                 res.status(401).json({data : err})
             }
-            res.status(201).json({data : data})
-            console.log(data)
+            res.status(201).json({data : dataBody}) 
         })
     })
 })
 
 app.put("/data/:id", (req, res) => {
+        const {id} = req.params
     fs.readFile("./db.json", 'utf8', (err, jsonString) => {
         const parses = JSON.parse(jsonString)
-        const {id} = req.params
         const findId = parses.find(item => item.id === id) 
         Object.assign(findId, req.body) 
-        res.json({data : findId})
+        const change = JSON.stringify(parses)
+        fs.writeFile("./db.json", change, "utf-8", (err) => {
+            res.json({data : parses})
+        })
+        console.log({body : req.body, find : findId})
     })
 })
 
