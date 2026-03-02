@@ -1,95 +1,66 @@
-import axios from "axios"
+import axios from "axios";
 import express from "express"
+import dotenv from "dotenv"
 import cors from "cors"
-import fs from "fs"
-import { json } from "stream/consumers"
-import { parse } from "path"
-import { stringify } from "querystring"
-import e from "express"
+import Randomstring from "randomstring";
 
 const app = express()
 app.use(express.json())
+dotenv.config()
 app.use(cors())
-const port = 3000
 
-app.get("/data", (req, res) => {
-    fs.readFile("./db.json", 'utf8', (err, jsonString)=> {
-        try{
-            if(!jsonString){
-                res.json({data : "invalid Data"})
-                console.warn("invalid data")
-            }
-            const parse = JSON.parse(jsonString)
-            res.status(200).json({data : parse})
-        }catch{
-            res.status(404).json({data: "not found"})
-            console.error("data not found")
+const id_github = process.env.GITHUB_CLIENT_ID
+const id_secret = process.env.GITHUB_SECRET_ID
+
+app.get("/", (req, res) => {
+    res.json({status : "run"})
+})
+
+app.get("/auth/github", (req, res) => {
+  const url =
+    "https://github.com/login/oauth/authorize" +
+    `?client_id=${id_github}` +
+    "&scope=user:email read:user";
+    
+    res.redirect(url);
+})
+const rand = Randomstring.generate({
+    charset : "alphabetic"
+})
+console.log(rand)
+app.get("/auth/callback", async (req, res) => {
+    const {code, error} = req.query
+
+    const error_res = ``
+
+    const promt = answere.gpt_ai("jalankan if jika data code memiliki type data yg aneh dan mencurigakan passing data dengan response sesui type data yg di kirim")
+
+    if(ai(promt)) {
+        return promt.result
+    }
+
+    if(error) {
+        const url = `http://localhost:3013/auth/login/${error}`
+        return res.redirect(url)
+    }
+
+    const tokenres = await axios.post("https://github.com/login/oauth/access_token", {
+        client_id: id_github,
+        client_secret: id_secret,
+        code
+    },
+        { headers: { Accept: "application/json" } }
+    )
+    const access_token = tokenres.data.access_token
+    const data_auth = await axios.get("https://api.github.com/user", 
+        {
+            headers: {Authorization : `Bearer ${access_token}`}
         }
-    })
+    )
+    const githubUser = data_auth.data
+    res.json({token : access_token, user_data : githubUser})
 })
 
 
-app.post("/data", (req, res) => {
-    const {data} = req.body.id
-    console.log(data)
-    const {id, barang} = data
-    fs.readFile("./db.json", "utf-8", (err, jsonString) => {
-        const parses = JSON.parse(jsonString)
 
-        if(parses.find(item => item.id === id)){
-            res.json({data : "data id duplikat"})
-            return
-        }
-        
-        if(parses.find(item => item.barang === barang)){
-            res.json({data : "data barang duplikat"})
-            return
-        }
-        const together = [...parses, data]
-        const change = JSON.stringify(together)
-        fs.writeFile("./db.json", change, "utf-8", (err) => {
-            if(err) {
-                res.status(401).json({data : err})
-            }
-            res.status(201).json({data : data}) 
-        })
-    })
-})
-
-app.put("/data/:id", (req, res) => {
-        const {id} = req.params
-    fs.readFile("./db.json", 'utf8', (err, jsonString) => {
-        const parses = JSON.parse(jsonString)
-        const findId = parses.find(item => item.id === id) 
-        Object.assign(findId, req.body) 
-        const change = JSON.stringify(parses)
-        fs.writeFile("./db.json", change, "utf-8", (err) => {
-            res.json({data : parses})
-        })
-        console.log({body : req.body, find : findId})
-    })
-})
-
-app.delete("/data/:id", (req, res) => {
-    const {id} = req.params
-    fs.readFile("./db.json", "utf-8", (err, jsonString) => {
-        const parses = JSON.parse(jsonString)
-        const filters = parses.filter(item => item.id !== id)
-        console.log(filters)
-        const stringifyFilter = JSON.stringify(filters)
-        fs.writeFile("./db.json", stringifyFilter, "utf-8", (err) => {
-            const findit = parses.find(item => item.id === id)
-            if(findit == null) {
-                res.status(401).json({data : "data tidak ada, sudah di hapus"})
-            }
-            if(err) {
-                res.json({data : err})
-            }
-
-            res.status(201).json({data : "berhasil di hapus"})
-        })
-    })
-})
-
-
-app.listen(port, () => console.log("server listen on port " + port))
+app.listen(3000, (console.log("listen on port 3000")))
