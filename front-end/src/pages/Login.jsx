@@ -12,7 +12,7 @@ const Login = () => {
     const navigate = useNavigate()
     const [error, setError] = useState("")
     const {id} = useParams()
-    const error_token = "access_deniedhythue463jndnplqoxvzbnfmghjkry32"
+    const error_token = "access_deniedhythue463jndnplqoxvzbnfmghjkry0d"
 
     useEffect(() => {
         if(id !== error_token) {
