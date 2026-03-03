@@ -2,7 +2,8 @@ import axios from "axios";
 import express from "express"
 import dotenv from "dotenv"
 import cors from "cors"
-import Randomstring from "randomstring";
+import cookieParser from "cookie-parser";
+import jwt from "jsonwebtoken"
 
 const app = express()
 app.use(express.json())
@@ -11,6 +12,8 @@ app.use(cors())
 
 const id_github = process.env.GITHUB_CLIENT_ID
 const id_secret = process.env.GITHUB_SECRET_ID
+const error_key = process.env.ERROR_KEY
+const secret_key = process.env.SECRET_KEY
 
 app.get("/", (req, res) => {
     res.json({status : "run"})
@@ -24,23 +27,16 @@ app.get("/auth/github", (req, res) => {
     
     res.redirect(url);
 })
-const rand = Randomstring.generate({
-    charset : "alphabetic"
-})
-console.log(rand)
+
+
+
 app.get("/auth/callback", async (req, res) => {
     const {code, error} = req.query
 
-    const error_res = ``
-
-    const promt = answere.gpt_ai("jalankan if jika data code memiliki type data yg aneh dan mencurigakan passing data dengan response sesui type data yg di kirim")
-
-    if(ai(promt)) {
-        return promt.result
-    }
+    const error_key_res = error + error_key
 
     if(error) {
-        const url = `http://localhost:3013/auth/login/${error}`
+        const url = `http://localhost:3013/auth/login/${error_key_res}`
         return res.redirect(url)
     }
 
@@ -58,9 +54,36 @@ app.get("/auth/callback", async (req, res) => {
         }
     )
     const githubUser = data_auth.data
-    res.json({token : access_token, user_data : githubUser})
+
+    if(!githubUser && !access_token) {
+        res.status(404).json({data : "accses token data user not found"})
+    }
+
+    if(!access_token) {
+        const url = `http://localhost:3013/auth/login/${error_key}`
+        return res.redirect(url)
+    }
+
+    const payload = {access_token}
+
+    const token = jwt.sign(payload, secret_key, {expiresIn: "5m"})
+    res.cookie("token_accses", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge: 60 * 60 * 1000
+    })
+
+    const url = `http://localhost:3013/user/dashboard/${code}`
+    res.redirect(url)
 })
 
+//!belum
+app.get("/user/api/:id", (req, res) => {
+    const {id} = req.params
+    if(id) {
 
+    }
+})
 
 app.listen(3000, (console.log("listen on port 3000")))

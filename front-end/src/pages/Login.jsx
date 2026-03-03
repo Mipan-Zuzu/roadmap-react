@@ -6,16 +6,20 @@ import Button from "../ui/Button"
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+    const navigate = useNavigate()
     const [error, setError] = useState("")
     const {id} = useParams()
+    const error_token = "access_deniedhythue463jndnplqoxvzbnfmghjkry32"
 
     useEffect(() => {
-        if(id) {
-            
-        }
-    }, [id])
+        if(id !== error_token) {
+            navigate("/auth/login")
+        }else
+            setError("Accses was denied try again")
+    }, [id, navigate])
 
     const handleOuth = () => {
         const url = "http://localhost:3000/auth/github"
