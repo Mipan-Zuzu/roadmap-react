@@ -8,7 +8,10 @@ import jwt from "jsonwebtoken"
 const app = express()
 app.use(express.json())
 dotenv.config()
-app.use(cors())
+app.use(cors({
+    origin : "http://localhost:3013",
+    credentials: true
+}))
 app.use(cookieParser())
 
 const id_github = process.env.GITHUB_CLIENT_ID
@@ -36,7 +39,7 @@ app.get("/data/user", async (req, res) => {
         headers: {Authorization : `Bearer ${cookie_res}`} 
     })
 
-    return res.send(data_auth.data)
+    res.json(data_auth.data)
 })
 
 app.get("/auth/callback", async (req, res) => {

@@ -6,7 +6,7 @@ export const getUser = createAsyncThunk("/user/data", async () => {
     return res.data
 })
 
-export const getDataUser = createAsyncThunk("/get/data/user", async () => {
+export const getDataUser = createAsyncThunk("/data/user", async () => {
     const res = await axios.get(`http://localhost:3000/data/user`)
     return res.data
 })
@@ -21,13 +21,13 @@ export const userSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(getUser.fulfilled, (state, action) => {
-            entryUser.setAll(state, action.payload.data)
+            entryUser.setAll(state, action.payload)
         }),
         builder.addCase(getDataUser.fulfilled, (state, action) => {
-            entryUser.setAll(state, action.payload.data)
+            entryUser.setAll(state, action.payload)
         })
     }
 })
 
-export const userSelector = entryUser.getSelectors((state) => state.user)
+export const {selectAll : selecAllUser} = entryUser.getSelectors((state) => state.user)
 export default userSlice.reducer

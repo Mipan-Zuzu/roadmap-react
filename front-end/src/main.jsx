@@ -7,6 +7,7 @@ import LandingPage from './pages/LandingPage.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import {Provider} from "react-redux"
 import { store } from './Store/Store.jsx'
+import Test from './pages/Test.jsx'
 
 
 const router = createBrowserRouter ([
@@ -23,8 +24,16 @@ const router = createBrowserRouter ([
     element: <Login />,
   },
   {
+    path: "/user/dashboard/:id",
+    element: <Dashboard />
+  },
+  {
     path: "/user/dashboard",
     element: <Dashboard />
+  },
+  {
+    path: "/test",
+    element : <Test />
   }
 ])
 
