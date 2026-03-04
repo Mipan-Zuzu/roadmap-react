@@ -6,8 +6,13 @@ export const getUser = createAsyncThunk("/user/data", async () => {
     return res.data
 })
 
-export const entryUser = createEntityAdapter({
-    selectId : (user) => user.id
+export const getDataUser = createAsyncThunk("/get/data/user", async () => {
+    const res = await axios.get(`http://localhost:3000/data/user`)
+    return res.data
+})
+
+const entryUser = createEntityAdapter({
+    selectId: (user) =>  user.id
 })
 
 export const userSlice = createSlice({
@@ -17,9 +22,12 @@ export const userSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(getUser.fulfilled, (state, action) => {
             entryUser.setAll(state, action.payload.data)
+        }),
+        builder.addCase(getDataUser.fulfilled, (state, action) => {
+            entryUser.setAll(state, action.payload.data)
         })
     }
 })
 
 export const userSelector = entryUser.getSelectors((state) => state.user)
-export default userSlice
+export default userSlice.reducer

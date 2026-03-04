@@ -9,6 +9,7 @@ const app = express()
 app.use(express.json())
 dotenv.config()
 app.use(cors())
+app.use(cookieParser())
 
 const id_github = process.env.GITHUB_CLIENT_ID
 const id_secret = process.env.GITHUB_SECRET_ID
@@ -28,11 +29,18 @@ app.get("/auth/github", (req, res) => {
     res.redirect(url);
 })
 
+app.get("/data/user", async (req, res) => {
+    const cookie_res = req.cookies.token_accses
+    
+    const data_auth = await axios.get("https://api.github.com/user", {
+        headers: {Authorization : `Bearer ${cookie_res}`} 
+    })
 
+    return res.send(data_auth.data)
+})
 
 app.get("/auth/callback", async (req, res) => {
     const {code, error} = req.query
-
     const error_key_res = error + error_key
 
     if(error) {
@@ -64,25 +72,25 @@ app.get("/auth/callback", async (req, res) => {
         return res.redirect(url)
     }
 
-    const payload = {access_token}
+    // const payload = {access_token}
 
-    const token = jwt.sign(payload, secret_key, {expiresIn: "5m"})
-    res.cookie("token_accses", token, {
+    // const token = jwt.sign(payload, secret_key, {expiresIn: "5m"})
+
+    res.cookie("token_accses", access_token, {
         httpOnly: true,
         secure: true,
         sameSite: "none",
         maxAge: 60 * 60 * 1000
     })
 
-    const url = `http://localhost:3013/user/dashboard/${code}`
-    res.redirect(url)
+    res.redirect(`http://localhost:3013/user/dashboard/${access_token}`)
 })
 
 //!belum
 app.get("/user/api/:id", (req, res) => {
     const {id} = req.params
     if(id) {
-
+        
     }
 })
 

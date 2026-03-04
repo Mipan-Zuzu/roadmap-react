@@ -31,6 +31,11 @@ export const deleteProduct = createAsyncThunk("/product/deleteProduct", async (i
     return res.data
 })
 
+export const getUser = createAsyncThunk("/user/data", async () => {
+    const res = await axios.get(`http://localhost:3000/data/user`)
+    return res.data
+})
+
 const productEntry = createEntityAdapter({
     selectId: (product) =>  product.id
 })
@@ -53,6 +58,9 @@ const productSlice = createSlice({
         }),
         builder.addCase(deleteProduct.fulfilled, (state, action) => {
             productEntry.removeOne(state, action.payload)
+        }),
+        builder.addCase(getUser.fulfilled, (state, action) => {
+            productEntry.setAll(state, action.payload.data)
         })
     }
 })
