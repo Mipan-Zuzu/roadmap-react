@@ -33,13 +33,30 @@ app.get("/auth/github", (req, res) => {
 })
 
 app.get("/data/user", async (req, res) => {
-    const cookie_res = req.cookies.token_accses
-    
-    const data_auth = await axios.get("https://api.github.com/user", {
+    try {
+        const cookie_res = req.cookies.token_accses
+        if(!cookie_res) {
+            res.status(401).json({data : "request failed with status code 401"})
+        }
+        const data_auth = await axios.get("https://api.github.com/user", {
         headers: {Authorization : `Bearer ${cookie_res}`} 
-    })
+        })
+        
+        if(!data_auth || data_auth == null) {
+            res.status(404).json(
+                {   
+                    data : "invalid data data is null",
+                    status_code : 404
+                }
+            )
+        }
+        
 
-    res.json(data_auth.data)
+        res.json(data_auth.data)
+    }catch (error) {
+        res.status(400).json({data : error})
+    }
+
 })
 
 app.get("/auth/callback", async (req, res) => {

@@ -4,6 +4,10 @@ import {selecAllUser, getDataUser} from "../features/Github/GithubSlice"
 
 const Dashboard = () => {
     const dispatch = useDispatch()
+    
+    useEffect(() => {
+
+    }, [])
     const user_data = useSelector(selecAllUser)
     const user = user_data[0]
     useEffect(() => {
