@@ -7,7 +7,9 @@ export const getUser = createAsyncThunk("/user/data", async () => {
 })
 
 export const getDataUser = createAsyncThunk("/data/user", async () => {
-    const res = await axios.get(`http://localhost:3000/data/user`)
+    const res = await axios.get(`http://localhost:3000/data/user`, {
+        withCredentials : true,
+    })
     return res.data
 })
 

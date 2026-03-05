@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard.jsx'
 import {Provider} from "react-redux"
 import { store } from './Store/Store.jsx'
 import Test from './pages/Test.jsx'
+import Protect from './security/Protect.jsx'
 
 
 const router = createBrowserRouter ([
@@ -29,7 +30,9 @@ const router = createBrowserRouter ([
   },
   {
     path: "/user/dashboard",
-    element: <Dashboard />
+    element: <Protect>
+      <Dashboard />
+    </Protect>
   },
   {
     path: "/test",

@@ -52,8 +52,8 @@ app.get("/data/user", async (req, res) => {
         }
         
 
-        res.json(data_auth.data)
-    }catch (error) {
+        res.json([data_auth.data])
+    } catch (error) {
         res.status(400).json({data : error})
     }
 
