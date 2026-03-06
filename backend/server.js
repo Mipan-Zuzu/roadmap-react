@@ -42,19 +42,19 @@ app.get("/data/user", async (req, res) => {
         headers: {Authorization : `Bearer ${cookie_res}`} 
         })
         
-        if(!data_auth || data_auth == null) {
+        if(!data_auth) {
             res.status(404).json(
-                {   
+                [{   
                     data : "invalid data data is null",
                     status_code : 404
-                }
+                }]
             )
         }
         
 
         res.json([data_auth.data])
     } catch (error) {
-        res.status(400).json({data : error})
+        res.status(400).json(error.data)
     }
 
 })
@@ -81,6 +81,7 @@ app.get("/auth/callback", async (req, res) => {
             headers: {Authorization : `Bearer ${access_token}`}
         }
     )
+
     const githubUser = data_auth.data
 
     if(!githubUser && !access_token) {
@@ -103,7 +104,7 @@ app.get("/auth/callback", async (req, res) => {
         maxAge: 60 * 60 * 1000
     })
 
-    res.redirect(`http://localhost:3013/user/dashboard/${access_token}`)
+    res.redirect(`http://localhost:3013/user/dashboard`)
 })
 
 //!belum

@@ -1,24 +1,25 @@
 import { useEffect } from "react"
 import { selecAllUser, getDataUser } from "../features/Github/GithubSlice"
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 
-const Protect = () => {
-    const navigate = useNavigate()
+const Protect = ({children}) => {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const user_data = useSelector(selecAllUser)
-    const user = user_data[0]
+    const {status, error} = useSelector((state) => state.user)
     useEffect(() => {
-        dispatch(getDataUser)
+        dispatch(getDataUser())
     }, [dispatch])
+    console.log(user_data)
 
-    console.log(user)
+    useEffect(() => {
+        if(status === "failed" && error) {
+            navigate("/")
+    }
+    }, [navigate, error, status])
 
-    // useEffect(() => {
-    //     if(user == null) {
-    //         navigate("/auth/login")
-    //     }
-    // }, [navigate, user])
+    return children
 }
 
 export default Protect
